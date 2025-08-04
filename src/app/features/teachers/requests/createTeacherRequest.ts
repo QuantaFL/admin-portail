@@ -2,6 +2,9 @@ export interface CreateTeacherRequest {
   hire_date: string;
   role_id: number;
   nationality: string;
+  photo?: File;
+  cv?: File;
+  diplomas?: File;
   user: {
     first_name: string;
     last_name: string;
@@ -20,4 +23,21 @@ export interface CreateTeacherRequest {
     end_time: string;
     coefficient: number;
   };
+}
+
+export interface FileUploadConfigTeachers {
+  label: string;
+  accept: string;
+  maxSize: number; // en MB
+  required: boolean;
+  placeholder: string;
+}
+
+export interface TeacherResponseTeachers {
+  id: number;
+  hire_date: string;
+  nationality: string;
+  photo_url?: string;
+  cv_url?: string;
+  diplomas_url?: string;
 }

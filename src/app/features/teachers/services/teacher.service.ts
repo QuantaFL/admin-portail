@@ -33,6 +33,15 @@ export class TeacherService {
 
   getTeacherByUserId(id: number): Observable<Teacher> {
     return this.http.get<Teacher>(`${this.apiUrl}/user/${id}`);
+  }
 
+  toggleTeacherStatus(teacherId: number): Observable<Teacher> {
+    console.log('Calling teacher toggle-status API for teacher ID:', teacherId);
+    return this.http.post<Teacher>(`${this.apiUrl}/toggle-status`, { teacher_id: teacherId });
+  }
+
+  createTeacherWithFiles(formData: FormData): Observable<any> {
+    console.log('Creating teacher with files via FormData');
+    return this.http.post(`${this.apiUrl}`, formData);
   }
 }

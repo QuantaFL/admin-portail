@@ -37,6 +37,24 @@
             <div *ngIf="subject.pivot" class="assignment-info">
               <small>Assigné le: {{ subject.pivot.created_at | date:'dd/MM/yyyy HH:mm' }}</small>
             </div>
+            <div class="subject-actions">
+              <button class="btn-assign-teacher" (click)="openAssignmentModal(subject)">
+                <div class="btn-content">
+                  <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+                  </svg>
+                  <div class="btn-text">
+                    <span class="btn-title">Assigner un enseignant</span>
+                    <small class="btn-subtitle">Planifier un cours</small>
+                  </div>
+                </div>
+                <div class="btn-arrow">
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+                  </svg>
+                </div>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -53,6 +71,75 @@
     <div class="modal-footer">
       <button class="btn-primary" (click)="closeModal()">
         Fermer
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal d'assignement d'enseignant -->
+<div class="modal-overlay" *ngIf="isAssignmentModalOpen" (click)="closeAssignmentModal()">
+  <div class="modal-content assignment-modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Assigner un enseignant</h3>
+      <button class="close-btn" (click)="closeAssignmentModal()">&times;</button>
+    </div>
+
+    <div class="modal-body">
+      <div *ngIf="selectedSubject" class="assignment-info">
+        <p><strong>Matière:</strong> {{ selectedSubject.name }}</p>
+        <p><strong>Classe:</strong> {{ selectedClass?.name }}</p>
+        <p><strong>Niveau:</strong> {{ selectedClass?.level }}</p>
+      </div>
+
+      <form class="assignment-form">
+        <div class="form-group">
+          <label for="teacher">Enseignant *</label>
+          <select id="teacher" [(ngModel)]="assignmentForm.teacher_id" name="teacher" class="form-control" required>
+            <option value="0">Sélectionner un enseignant</option>
+            <option *ngFor="let teacher of teachers" [value]="teacher.id">
+              {{ teacher.userModel.first_name }} {{ teacher.userModel.last_name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="day">Jour de la semaine *</label>
+          <select id="day" [(ngModel)]="assignmentForm.day_of_week" name="day" class="form-control" required>
+            <option value="">Sélectionner un jour</option>
+            <option *ngFor="let day of daysOfWeek" [value]="day.value">
+              {{ day.label }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="start_time">Heure de début *</label>
+            <input type="time" id="start_time" [(ngModel)]="assignmentForm.start_time" 
+                   name="start_time" class="form-control" required>
+          </div>
+
+          <div class="form-group">
+            <label for="end_time">Heure de fin *</label>
+            <input type="time" id="end_time" [(ngModel)]="assignmentForm.end_time" 
+                   name="end_time" class="form-control" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="coefficient">Coefficient</label>
+          <input type="number" id="coefficient" [(ngModel)]="assignmentForm.coefficient" 
+                 name="coefficient" class="form-control" min="0" step="0.5">
+        </div>
+      </form>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-secondary" (click)="closeAssignmentModal()">
+        Annuler
+      </button>
+      <button class="btn-primary" (click)="submitAssignment()">
+        Créer l'assignement
       </button>
     </div>
   </div>

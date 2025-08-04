@@ -32,12 +32,14 @@ export class TeacherListComponent implements OnInit {
     this.loading = true;
     this.teacherService.getAllTeacher().subscribe({
       next: (res) => {
-        console.log(res);
-        // Filtrer pour n'afficher que les enseignants actifs (contrats à true)
-        this.teachers = res.filter(teacher => teacher.isActive !== false).reverse();
+        console.log('All teachers from API:', res);
+        // Filtrer pour n'afficher que les enseignants avec status=true
+        this.teachers = res.filter(teacher => teacher.status === true).reverse();
+        console.log('Filtered active teachers:', this.teachers);
         this.loading = false;
       },
       error: (err) => {
+        console.error('Error fetching teachers:', err);
         this.error = 'Erreur lors du chargement des enseignants';
         this.loading = false;
       }
@@ -59,12 +61,12 @@ export class TeacherListComponent implements OnInit {
   confirmTermination(teacher: Teacher): void {
     console.log('Confirming termination for teacher:', teacher);
     
-    this.assignmentService.toggleAssignmentStatusByTeacher(teacher.id).subscribe({
+    this.teacherService.toggleTeacherStatus(teacher.id).subscribe({
       next: (response) => {
-        console.log('Assignment status toggled successfully:', response);
+        console.log('Teacher status toggled successfully:', response);
         
         const teacherName = `${teacher.userModel.first_name} ${teacher.userModel.last_name}`;
-        if (response.isActive) {
+        if (response.status) {
           this.toastr.success(`Contrat de ${teacherName} réactivé avec succès`, 'Succès');
         } else {
           this.toastr.success(`Contrat de ${teacherName} résilié avec succès`, 'Succès');
@@ -75,7 +77,7 @@ export class TeacherListComponent implements OnInit {
         this.closeTerminationModal();
       },
       error: (error) => {
-        console.error('Error toggling assignment status:', error);
+        console.error('Error toggling teacher status:', error);
         this.toastr.error('Erreur lors de la résiliation du contrat', 'Erreur');
       }
     });

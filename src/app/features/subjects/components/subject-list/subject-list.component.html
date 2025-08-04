@@ -1,12 +1,15 @@
 <div class="subject-page-container">
   <div class="page-header">
     <h2 class="page-title">Liste des matières</h2>
-    <button class="btn-primary" routerLink="/subject">
-      <svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-      </svg>
-      Ajouter une matière
-    </button>
+    <div>
+      <!--<p>Debug: Modal open = {{ isAddSubjectModalOpen }}</p>-->
+      <button class="btn-primary" (click)="openAddSubjectModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+        </svg>
+        Ajouter une matière
+      </button>
+    </div>
   </div>
 
   <div class="card">
@@ -49,5 +52,75 @@
     </table>
 
     <div *ngIf="!loading && !subjects.length" class="info-message">Aucune matière trouvée.</div>
+  </div>
+</div>
+
+<!-- Modal d'ajout de matière -->
+<div class="modal-overlay" *ngIf="isAddSubjectModalOpen" (click)="closeAddSubjectModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Ajouter une nouvelle matière</h3>
+      <button class="close-btn" (click)="closeAddSubjectModal()">&times;</button>
+    </div>
+
+    <div class="modal-body">
+      <form class="subject-form">
+        <div class="form-group">
+          <label for="subjectName">Nom de la matière *</label>
+          <input 
+            type="text" 
+            id="subjectName" 
+            [(ngModel)]="subjectForm.name" 
+            name="name" 
+            class="form-control" 
+            placeholder="Ex: Mathématiques, Français, Histoire..."
+            required
+            [disabled]="isSubmittingSubject">
+        </div>
+
+        <div class="form-group">
+          <label for="subjectLevel">Niveau *</label>
+          <select 
+            id="subjectLevel" 
+            [(ngModel)]="subjectForm.level" 
+            name="level" 
+            class="form-control" 
+            required
+            [disabled]="isSubmittingSubject">
+            <option value="">Sélectionner un niveau</option>
+            <option *ngFor="let level of availableLevels" [value]="level">
+              {{ level }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="subjectCoefficient">Coefficient *</label>
+          <input 
+            type="number" 
+            id="subjectCoefficient" 
+            [(ngModel)]="subjectForm.coefficient" 
+            name="coefficient" 
+            class="form-control" 
+            min="0.5" 
+            step="0.5"
+            placeholder="Ex: 1, 2, 3..."
+            required
+            [disabled]="isSubmittingSubject">
+        </div>
+      </form>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-secondary" (click)="closeAddSubjectModal()" [disabled]="isSubmittingSubject">
+        Annuler
+      </button>
+      <button class="btn-primary" (click)="submitSubject()" [disabled]="isSubmittingSubject">
+        <svg *ngIf="isSubmittingSubject" class="icon spinner" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+        </svg>
+        {{ isSubmittingSubject ? 'Création...' : 'Créer la matière' }}
+      </button>
+    </div>
   </div>
 </div>

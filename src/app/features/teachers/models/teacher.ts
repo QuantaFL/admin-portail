@@ -23,4 +23,5 @@ export interface Teacher {
   userModel: User;
   count?: number;
   isActive?: boolean;
+  status?: boolean;
 }

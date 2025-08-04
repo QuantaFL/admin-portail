@@ -34,4 +34,5 @@ export class ClassService {
   getAllClasses(): Observable<ClassModel[]> {
     return this.http.get<ClassModel[]>(`${this.apiUrl}`);
   }
+  
 }

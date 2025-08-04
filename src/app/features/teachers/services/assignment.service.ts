@@ -6,6 +6,16 @@ export interface ToggleAssignmentRequest {
   teacher_id: number;
 }
 
+export interface CreateAssignmentRequest {
+  teacher_id?: number;
+  class_model_id?: number;
+  subject_id?: number;
+  day_of_week?: string;
+  start_time?: string;
+  end_time?: string;
+  coefficient?: number;
+}
+
 export interface ToggleAssignmentResponse {
   id: number;
   teacher_id: number;
@@ -54,5 +64,10 @@ export class AssignmentService {
     return this.http.post<ToggleAssignmentResponse>(`${this.apiUrl}/toggle-status-by-teacher`, {
       teacher_id: teacherId
     });
+  }
+
+  createAssignment(assignmentData: CreateAssignmentRequest): Observable<ToggleAssignmentResponse> {
+    console.log('Creating assignment with data:', assignmentData);
+    return this.http.post<ToggleAssignmentResponse>(this.apiUrl, assignmentData);
   }
 }

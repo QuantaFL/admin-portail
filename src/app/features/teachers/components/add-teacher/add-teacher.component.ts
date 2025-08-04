@@ -6,8 +6,9 @@ import {SubjectService} from "../../../subjects/services/subject.service";
 import {ClassService} from "../../../class/services/class.service";
 import {Subject} from "../../../subjects/models/subject";
 import {ClassModel} from "../../../class/models/class";
-import {CreateTeacherRequest} from "../../requests/createTeacherRequest";
+import {CreateTeacherRequest, FileUploadConfigTeachers} from "../../requests/createTeacherRequest";
 import { ToastrService } from 'ngx-toastr';
+import { FileValidatorsTeachers } from '../../validators/file-validators-teachers';
 
 @Component({
   selector: 'app-add-teacher',
@@ -16,7 +17,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class AddTeacherComponent implements OnInit {
   currentStep = 0;
-  totalSteps = 4;
+  totalSteps = 5;
   
   // Formulaires séparés pour chaque étape
   personalInfoForm = new FormGroup({
@@ -46,8 +47,52 @@ export class AddTeacherComponent implements OnInit {
     endTime: new FormControl('', [Validators.required])
   });
 
+  // Nouveau formulaire pour les documents
+  documentsFormTeachers = new FormGroup({
+    photoTeachers: new FormControl(null, [
+      FileValidatorsTeachers.maxSizeTeachers(2),
+      FileValidatorsTeachers.fileTypeTeachers(['.jpg', '.jpeg', '.png'])
+    ]),
+    cvTeachers: new FormControl(null, [
+      FileValidatorsTeachers.maxSizeTeachers(5),
+      FileValidatorsTeachers.fileTypeTeachers(['.pdf', '.doc', '.docx'])
+    ]),
+    diplomasTeachers: new FormControl(null, [
+      FileValidatorsTeachers.maxSizeTeachers(10),
+      FileValidatorsTeachers.fileTypeTeachers(['.pdf', '.jpg', '.jpeg', '.png'])
+    ])
+  });
+
   subjects: Subject[] = [];
   classes: ClassModel[] = [];
+  
+  // Configuration des fichiers
+  fileConfigsTeachers: { [key: string]: FileUploadConfigTeachers } = {
+    photoTeachers: {
+      label: "Photo de profil",
+      accept: ".jpg,.jpeg,.png",
+      maxSize: 2,
+      required: false,
+      placeholder: "Sélectionner une photo (optionnel)"
+    },
+    cvTeachers: {
+      label: "Curriculum Vitae", 
+      accept: ".pdf,.doc,.docx",
+      maxSize: 5,
+      required: false,
+      placeholder: "Télécharger le CV (optionnel)"
+    },
+    diplomasTeachers: {
+      label: "Diplômes",
+      accept: ".pdf,.jpg,.jpeg,.png", 
+      maxSize: 10,
+      required: false,
+      placeholder: "Joindre les diplômes (optionnel)"
+    }
+  };
+  
+  // Preview des fichiers sélectionnés
+  filePreviewsTeachers: { [key: string]: { name: string, size: string, url?: string } } = {};
   
   steps = [
     { 
@@ -73,6 +118,12 @@ export class AddTeacherComponent implements OnInit {
       subtitle: 'Planification des cours',
       form: this.scheduleForm,
       icon: '📅'
+    },
+    { 
+      title: 'Documents',
+      subtitle: 'Fichiers et pièces justificatives',
+      form: this.documentsFormTeachers,
+      icon: '📄'
     }
   ];
 
@@ -89,6 +140,196 @@ export class AddTeacherComponent implements OnInit {
   genders = [
     { value: 'M', label: 'Masculin' },
     { value: 'F', label: 'Féminin' }
+  ];
+
+  // Liste des nationalités disponibles
+  nationalities = [
+    'Afghane',
+    'Albanaise',
+    'Algérienne',
+    'Allemande',
+    'Américaine',
+    'Andorrane',
+    'Angolaise',
+    'Antiguaise-et-Barbudienne',
+    'Argentine',
+    'Arménienne',
+    'Australienne',
+    'Autrichienne',
+    'Azerbaïdjanaise',
+    'Bahaméenne',
+    'Bahreïnienne',
+    'Bangladaise',
+    'Barbadienne',
+    'Belge',
+    'Bélizienne',
+    'Béninoise',
+    'Bhoutanaise',
+    'Biélorusse',
+    'Birmane',
+    'Bolivienne',
+    'Bosnienne',
+    'Botswanaise',
+    'Brésilienne',
+    'Britannique',
+    'Brunéienne',
+    'Bulgare',
+    'Burkinabé',
+    'Burundaise',
+    'Cambodgienne',
+    'Camerounaise',
+    'Canadienne',
+    'Cap-verdienne',
+    'Centrafricaine',
+    'Chilienne',
+    'Chinoise',
+    'Chypriote',
+    'Colombienne',
+    'Comorienne',
+    'Congolaise',
+    'Costaricaine',
+    'Croate',
+    'Cubaine',
+    'Danoise',
+    'Djiboutienne',
+    'Dominicaine',
+    'Dominiquaise',
+    'Égyptienne',
+    'Émirienne',
+    'Équatorienne',
+    'Érythréenne',
+    'Espagnole',
+    'Estonienne',
+    'Éthiopienne',
+    'Fidjienne',
+    'Finlandaise',
+    'Française',
+    'Gabonaise',
+    'Gambienne',
+    'Géorgienne',
+    'Ghanéenne',
+    'Grecque',
+    'Grenadienne',
+    'Guatémaltèque',
+    'Guinéenne',
+    'Équato-guinéenne',
+    'Bissau-guinéenne',
+    'Guyanienne',
+    'Haïtienne',
+    'Hondurienne',
+    'Hongroise',
+    'Indienne',
+    'Indonésienne',
+    'Irakienne',
+    'Iranienne',
+    'Irlandaise',
+    'Islandaise',
+    'Israélienne',
+    'Italienne',
+    'Ivoirienne',
+    'Jamaïcaine',
+    'Japonaise',
+    'Jordanienne',
+    'Kazakhe',
+    'Kényane',
+    'Kirghize',
+    'Kiribatienne',
+    'Koweïtienne',
+    'Laotienne',
+    'Lesothane',
+    'Lettone',
+    'Libanaise',
+    'Libérienne',
+    'Libyenne',
+    'Liechtensteinoise',
+    'Lituanienne',
+    'Luxembourgeoise',
+    'Macédonienne',
+    'Malgache',
+    'Malaisienne',
+    'Malawienne',
+    'Maldivienne',
+    'Malienne',
+    'Maltaise',
+    'Marocaine',
+    'Marshallaise',
+    'Mauricienne',
+    'Mauritanienne',
+    'Mexicaine',
+    'Micronésienne',
+    'Moldave',
+    'Monégasque',
+    'Mongole',
+    'Monténégrine',
+    'Mozambicaine',
+    'Namibienne',
+    'Nauruane',
+    'Népalaise',
+    'Nicaraguayenne',
+    'Nigérienne',
+    'Nigériane',
+    'Norvégienne',
+    'Néo-zélandaise',
+    'Omanaise',
+    'Ougandaise',
+    'Ouzbèke',
+    'Pakistanaise',
+    'Panaméenne',
+    'Papouane-néo-guinéenne',
+    'Paraguayenne',
+    'Néerlandaise',
+    'Péruvienne',
+    'Philippine',
+    'Polonaise',
+    'Portugaise',
+    'Qatarienne',
+    'Roumaine',
+    'Russe',
+    'Rwandaise',
+    'Saint-lucienne',
+    'Saint-marinaise',
+    'Salomonaise',
+    'Salvadorienne',
+    'Samoane',
+    'São-toméenne',
+    'Saoudienne',
+    'Sénégalaise',
+    'Serbe',
+    'Seychelloise',
+    'Sierra-léonaise',
+    'Singapourienne',
+    'Slovaque',
+    'Slovène',
+    'Somalienne',
+    'Soudanaise',
+    'Sud-soudanaise',
+    'Sri-lankaise',
+    'Suédoise',
+    'Suisse',
+    'Surinamaise',
+    'Swazie',
+    'Syrienne',
+    'Tadjike',
+    'Tanzanienne',
+    'Tchadienne',
+    'Tchèque',
+    'Thaïlandaise',
+    'Timoraise',
+    'Togolaise',
+    'Tonguienne',
+    'Trinidadienne',
+    'Tunisienne',
+    'Turkmène',
+    'Turque',
+    'Tuvaluane',
+    'Ukrainienne',
+    'Uruguayenne',
+    'Vanuatuane',
+    'Vénézuélienne',
+    'Vietnamienne',
+    'Yéménite',
+    'Zambienne',
+    'Zimbabwéenne'
   ];
 
   constructor(
@@ -171,14 +412,83 @@ export class AddTeacherComponent implements OnInit {
       ...this.personalInfoForm.value,
       ...this.contactForm.value,
       ...this.professionalForm.value,
-      ...this.scheduleForm.value
+      ...this.scheduleForm.value,
+      ...this.documentsFormTeachers.value
     };
   }
+
+  // Méthodes pour gérer les fichiers
+  onFileSelectedTeachers(event: Event, fieldName: string): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    
+    if (file) {
+      const control = this.documentsFormTeachers.get(fieldName);
+      control?.setValue(file);
+      control?.markAsTouched();
+      
+      // Créer preview
+      this.filePreviewsTeachers[fieldName] = {
+        name: file.name,
+        size: FileValidatorsTeachers.getFileSizeTeachers(file.size)
+      };
+      
+      // Pour les images, créer une preview URL
+      if (fieldName === 'photoTeachers' && file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.filePreviewsTeachers[fieldName].url = e.target?.result as string;
+        };
+        reader.readAsDataURL(file);
+      }
+      
+      console.log('File selected for', fieldName, ':', file);
+    }
+  }
+
+  removeFileTeachers(fieldName: string): void {
+   const control = this.documentsFormTeachers.get(fieldName);
+    control?.setValue(null);
+    delete this.filePreviewsTeachers[fieldName];
+
+    const fileInput = document.getElementById(fieldName) as HTMLInputElement;
+    if (fileInput) {
+      fileInput.value = '';
+    }
+
+    this.toast.info(`Fichier supprimé pour ${this.fileConfigsTeachers[fieldName]?.label || fieldName}`, 'Suppression');
+    console.log(`[AddTeacher] Fichier supprimé pour le champ: ${fieldName}`);
+  }
+
+  getFileErrorTeachers(fieldName: string): string | null {
+    const control = this.documentsFormTeachers.get(fieldName);
+    if (control?.errors && control.touched) {
+      if (control.errors['maxSizeTeachers']) {
+        const maxSizeMB = control.errors['maxSizeTeachers'].maxSizeMB;
+        return `Le fichier dépasse la taille maximale de ${maxSizeMB}MB`;
+      }
+      if (control.errors['fileTypeTeachers']) {
+        const allowedTypes = control.errors['fileTypeTeachers'].allowedTypes.join(', ');
+        return `Type de fichier non autorisé. Types acceptés: ${allowedTypes}`;
+      }
+    }
+    return null;
+  }
+
+  hasFilePreviewTeachers(fieldName: string): boolean {
+    return !!this.filePreviewsTeachers[fieldName];
+  }
+  
 
   onSubmit(): void {
     if (this.areAllFormsValid()) {
       const formData = this.getAllFormData();
-      const teacherData: CreateTeacherRequest = {
+      
+      // Créer FormData pour envoyer les fichiers
+      const submitFormData = new FormData();
+      
+      // Ajouter les données JSON
+      const teacherData = {
         hire_date: formData.hireDate ?? '',
         role_id: 2,
         nationality: formData.nationality ?? '',
@@ -202,9 +512,32 @@ export class AddTeacherComponent implements OnInit {
         }
       };
       
-      console.log('Sending teacher data:', teacherData);
+      // Ajouter les données en tant que JSON
+       // Ajout des champs imbriqués pour Laravel
+      Object.entries(teacherData.user).forEach(([key, value]) => {
+        submitFormData.append(`user[${key}]`, value as string);
+      });
+      Object.entries(teacherData.assignment).forEach(([key, value]) => {
+        submitFormData.append(`assignment[${key}]`, value as string);
+      });
+      submitFormData.append('hire_date', teacherData.hire_date);
+      submitFormData.append('role_id', teacherData.role_id.toString());
+      submitFormData.append('nationality', teacherData.nationality);
       
-      this.teacherService.createTeacher(teacherData).subscribe({
+      // Ajouter les fichiers
+      if (formData.photoTeachers) {
+        submitFormData.append('photo', formData.photoTeachers);
+      }
+      if (formData.cvTeachers) {
+        submitFormData.append('cv', formData.cvTeachers);
+      }
+      if (formData.diplomasTeachers) {
+        submitFormData.append('diplomas', formData.diplomasTeachers);
+      }
+      
+      console.log('Sending teacher data with files:', submitFormData);
+      
+     this.teacherService.createTeacherWithFiles(submitFormData).subscribe({
         next: (res) => {
           console.log('Teacher created:', res);
           this.toast.success('Enseignant créé avec succès', 'Succès');
@@ -225,7 +558,8 @@ export class AddTeacherComponent implements OnInit {
     return this.personalInfoForm.valid && 
            this.contactForm.valid && 
            this.professionalForm.valid && 
-           this.scheduleForm.valid;
+           this.scheduleForm.valid &&
+           this.documentsFormTeachers.valid;
   }
 
   markAllFormsAsTouched(): void {
@@ -233,6 +567,7 @@ export class AddTeacherComponent implements OnInit {
     this.contactForm.markAllAsTouched();
     this.professionalForm.markAllAsTouched();
     this.scheduleForm.markAllAsTouched();
+    this.documentsFormTeachers.markAllAsTouched();
   }
 
   getSelectedSubjectName(): string {

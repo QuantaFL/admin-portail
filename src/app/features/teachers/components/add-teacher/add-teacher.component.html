@@ -108,13 +108,16 @@
 
           <div class="form-group full-width">
             <label for="nationality" class="form-label">Nationalité *</label>
-            <input 
-              type="text" 
+            <select 
               id="nationality" 
               class="form-input" 
               formControlName="nationality"
-              placeholder="Ex: Sénégalais, Français, etc."
               [class.error]="personalInfoForm.get('nationality')?.invalid && personalInfoForm.get('nationality')?.touched">
+              <option value="">Sélectionner une nationalité</option>
+              <option *ngFor="let nationality of nationalities" [value]="nationality">
+                {{ nationality }}
+              </option>
+            </select>
             <div class="error-message" *ngIf="personalInfoForm.get('nationality')?.invalid && personalInfoForm.get('nationality')?.touched">
               La nationalité est requise
             </div>
@@ -305,6 +308,157 @@
             </div>
           </div>
         </div>
+      </form>
+    </div>
+
+    <!-- Étape 5: Documents {{ steps[4].icon }} -->
+    <div *ngIf="currentStep === 4" class="step-form">
+      <form [formGroup]="documentsFormTeachers" class="form-section">
+        <div class="step-header">
+          <h2 class="step-title">{{ steps[4].title }}</h2>
+          <p class="step-description">{{ steps[4].subtitle }}</p>
+        </div>
+        
+        <!-- Upload sections -->
+        <div class="documents-grid">
+          <!-- Photo de profil -->
+          <div class="upload-section">
+            <div class="upload-header">
+              <h3 class="upload-title">📸 {{ fileConfigsTeachers['photoTeachers'].label }}</h3>
+              <span class="optional-badge">Optionnel</span>
+            </div>
+            
+            <div class="upload-area" [class.has-file]="hasFilePreviewTeachers('photoTeachers')">
+              <input 
+                #photoTeachersInput
+                type="file" 
+                id="photoTeachers" 
+                class="file-input" 
+                [accept]="fileConfigsTeachers['photoTeachers'].accept"
+                (change)="onFileSelectedTeachers($event, 'photoTeachers')"
+                style="display: none;">
+              
+              <div *ngIf="!hasFilePreviewTeachers('photoTeachers')" class="upload-prompt">
+                <div class="upload-icon">📷</div>
+                <p class="upload-text">{{ fileConfigsTeachers['photoTeachers'].placeholder }}</p>
+                <p class="upload-info">Max: {{ fileConfigsTeachers['photoTeachers'].maxSize }}MB - Formats: JPG, PNG</p>
+                <button type="button" class="btn-upload" (click)="photoTeachersInput.click()">
+                  Choisir une photo
+                </button>
+              </div>
+              
+              <div *ngIf="hasFilePreviewTeachers('photoTeachers')" class="file-preview">
+                <div class="file-info">
+                  <div class="file-icon">📷</div>
+                  <div class="file-details">
+                    <span class="file-name">{{ filePreviewsTeachers['photoTeachers']?.name }}</span>
+                    <span class="file-size">{{ filePreviewsTeachers['photoTeachers']?.size }}</span>
+                  </div>
+                  <button type="button" class="btn-remove" (click)="removeFileTeachers('photoTeachers')">
+                    <span>✕</span>
+                  </button>
+                </div>
+                <div *ngIf="filePreviewsTeachers['photoTeachers']?.url" class="image-preview">
+                  <img [src]="filePreviewsTeachers['photoTeachers']?.url" alt="Prévisualisation photo">
+                </div>
+              </div>
+            </div>
+            
+            <div class="error-message" *ngIf="getFileErrorTeachers('photoTeachers')">
+              {{ getFileErrorTeachers('photoTeachers') }}
+            </div>
+          </div>
+
+          <!-- CV -->
+          <div class="upload-section">
+            <div class="upload-header">
+              <h3 class="upload-title">📄 {{ fileConfigsTeachers['cvTeachers'].label }}</h3>
+              <span class="optional-badge">Optionnel</span>
+            </div>
+            
+            <div class="upload-area" [class.has-file]="hasFilePreviewTeachers('cvTeachers')">
+              <input 
+                #cvTeachersInput
+                type="file" 
+                id="cvTeachers" 
+                class="file-input" 
+                [accept]="fileConfigsTeachers['cvTeachers'].accept"
+                (change)="onFileSelectedTeachers($event, 'cvTeachers')"
+                style="display: none;">
+              
+              <div *ngIf="!hasFilePreviewTeachers('cvTeachers')" class="upload-prompt">
+                <div class="upload-icon">📄</div>
+                <p class="upload-text">{{ fileConfigsTeachers['cvTeachers'].placeholder }}</p>
+                <p class="upload-info">Max: {{ fileConfigsTeachers['cvTeachers'].maxSize }}MB - Formats: PDF, DOC, DOCX</p>
+                <button type="button" class="btn-upload" (click)="cvTeachersInput.click()">
+                  Choisir un fichier
+                </button>
+              </div>
+              
+              <div *ngIf="hasFilePreviewTeachers('cvTeachers')" class="file-preview">
+                <div class="file-info">
+                  <div class="file-icon">📄</div>
+                  <div class="file-details">
+                    <span class="file-name">{{ filePreviewsTeachers['cvTeachers']?.name }}</span>
+                    <span class="file-size">{{ filePreviewsTeachers['cvTeachers']?.size }}</span>
+                  </div>
+                  <button type="button" class="btn-remove" (click)="removeFileTeachers('cvTeachers')">
+                    <span>✕</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <div class="error-message" *ngIf="getFileErrorTeachers('cvTeachers')">
+              {{ getFileErrorTeachers('cvTeachers') }}
+            </div>
+          </div>
+
+          <!-- Diplômes -->
+          <div class="upload-section">
+            <div class="upload-header">
+              <h3 class="upload-title">🎓 {{ fileConfigsTeachers['diplomasTeachers'].label }}</h3>
+              <span class="optional-badge">Optionnel</span>
+            </div>
+            
+            <div class="upload-area" [class.has-file]="hasFilePreviewTeachers('diplomasTeachers')">
+              <input 
+                #diplomasTeachersInput
+                type="file" 
+                id="diplomasTeachers" 
+                class="file-input" 
+                [accept]="fileConfigsTeachers['diplomasTeachers'].accept"
+                (change)="onFileSelectedTeachers($event, 'diplomasTeachers')"
+                style="display: none;">
+              
+              <div *ngIf="!hasFilePreviewTeachers('diplomasTeachers')" class="upload-prompt">
+                <div class="upload-icon">🎓</div>
+                <p class="upload-text">{{ fileConfigsTeachers['diplomasTeachers'].placeholder }}</p>
+                <p class="upload-info">Max: {{ fileConfigsTeachers['diplomasTeachers'].maxSize }}MB - Formats: PDF, JPG, PNG</p>
+                <button type="button" class="btn-upload" (click)="diplomasTeachersInput.click()">
+                  Choisir un fichier
+                </button>
+              </div>
+              
+              <div *ngIf="hasFilePreviewTeachers('diplomasTeachers')" class="file-preview">
+                <div class="file-info">
+                  <div class="file-icon">🎓</div>
+                  <div class="file-details">
+                    <span class="file-name">{{ filePreviewsTeachers['diplomasTeachers']?.name }}</span>
+                    <span class="file-size">{{ filePreviewsTeachers['diplomasTeachers']?.size }}</span>
+                  </div>
+                  <button type="button" class="btn-remove" (click)="removeFileTeachers('diplomasTeachers')">
+                    <span>✕</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <div class="error-message" *ngIf="getFileErrorTeachers('diplomasTeachers')">
+              {{ getFileErrorTeachers('diplomasTeachers') }}
+            </div>
+          </div>
+        </div>
 
         <!-- Résumé final -->
         <div class="summary-section">
@@ -330,6 +484,20 @@
             <div class="summary-item">
               <strong>Classe:</strong> 
               {{ getSelectedClassName() }}
+            </div>
+            <div class="summary-item">
+              <strong>Documents:</strong>
+              <div class="document-status">
+                <span [class]="hasFilePreviewTeachers('photoTeachers') ? 'status-uploaded' : 'status-missing'">
+                  Photo: {{ hasFilePreviewTeachers('photoTeachers') ? '✓' : '✗' }}
+                </span>
+                <span [class]="hasFilePreviewTeachers('cvTeachers') ? 'status-uploaded' : 'status-missing'">
+                  CV: {{ hasFilePreviewTeachers('cvTeachers') ? '✓' : '✗' }}
+                </span>
+                <span [class]="hasFilePreviewTeachers('diplomasTeachers') ? 'status-uploaded' : 'status-missing'">
+                  Diplômes: {{ hasFilePreviewTeachers('diplomasTeachers') ? '✓' : '✗' }}
+                </span>
+              </div>
             </div>
           </div>
         </div>
