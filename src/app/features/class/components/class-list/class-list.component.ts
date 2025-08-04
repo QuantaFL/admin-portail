@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ClassService } from '../../services/class.service';
-import { ReportCardService } from '../../services/report-card.service';
 import { ClassModel } from '../../../teacher-dashboard/models/class-model';
-import { ReportCard } from '../../models/report-card.model';
 import { Router } from '@angular/router';
-import { ReportCardService, ReportCard } from '../../services/report-card.service';
+import { ReportCardService } from '../../services/report-card.service';
 import { ToastrService } from 'ngx-toastr';
+import { ReportCard } from '../../models/report-card.model';
 
 @Component({
   selector: 'app-class-list',
@@ -16,7 +15,6 @@ export class ClassListComponent implements OnInit {
 
   constructor(
     private classService: ClassService,
-    private reportCardService: ReportCardService,
     private router: Router,
     private reportCardService: ReportCardService,
     private toastr: ToastrService
