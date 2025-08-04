@@ -2,15 +2,21 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(90deg, #f8fafc 0%, #e0e7ff 100%);
-  border-radius: 1.5rem;
-  box-shadow: 0 4px 24px rgba(80, 80, 200, 0.08);
+  background: var(--background-color);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   padding: 2rem 2.5rem;
   margin: 2rem auto;
   max-width: 700px;
   position: relative;
   overflow: hidden;
-  transition: background 0.3s;
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+  }
 }
 
 .lottie-animation {
@@ -27,31 +33,44 @@
 .countdown {
   font-size: 2rem;
   font-weight: bold;
-  color: #3b3b7a;
+  color: var(--primary-color);
   margin: 1rem 0;
   letter-spacing: 0.1em;
 }
 
 .submit-btn {
-  background: linear-gradient(90deg, #6366f1 0%, #818cf8 100%);
+  background: var(--primary-color);
   color: #fff;
   border: none;
-  border-radius: 2rem;
+  border-radius: 12px;
   padding: 0.75rem 2rem;
   font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(80, 80, 200, 0.12);
-  transition: background 0.2s, transform 0.2s;
-}
-.submit-btn:hover {
-  background: linear-gradient(90deg, #818cf8 0%, #6366f1 100%);
-  transform: scale(1.05);
+  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.2);
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: var(--primary-color-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(59, 130, 246, 0.25);
+  }
 }
 
 .urgent {
-  background: linear-gradient(90deg, #fef2f2 0%, #fca5a5 100%);
+  background: #fef2f2;
+  border-color: #fca5a5;
+
+  .countdown {
+    color: #dc2626;
+  }
 }
+
 .warning {
-  background: linear-gradient(90deg, #fef9c3 0%, #fde68a 100%);
+  background: #fefce8;
+  border-color: #fde68a;
+
+  .countdown {
+    color: #d97706;
+  }
 }

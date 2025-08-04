@@ -1,6 +1,7 @@
 import { UserModel } from "./user-model";
 import { Subject } from "./subject";
 import { ClassModel } from "./class-model";
+import {Assignment} from "./assignment";
 
 export interface Teacher {
   id: number;
@@ -11,4 +12,5 @@ export interface Teacher {
   subjects: Subject[];
   assigned_classes: ClassModel[];
   userModel: UserModel;
+  assignements?: Assignment[];
 }

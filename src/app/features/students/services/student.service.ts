@@ -20,7 +20,7 @@ export class StudentService {
     return this.http.get<Student[]>(this.apiUrl);
   }
   getCurrentAcademicYear(): Observable<AcademicYear> {
-    return this.http.get<AcademicYear>('http://localhost:8000/api/v1/academic-years/current');
+    return this.http.get<AcademicYear>('http://localhost:8000/api/v1/academic-year/current');
   }
 
 

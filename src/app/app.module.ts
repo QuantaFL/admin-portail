@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { RouterModule } from '@angular/router';
-import { CommonModule, DatePipe } from '@angular/common';
+import {CommonModule, DatePipe, NgOptimizedImage} from '@angular/common';
 import { AppComponent } from './app.component';
 import { StudentListComponent } from './features/students/components/student-list/student-list.component';
 import { LoginComponent } from './features/auth/components/login/login.component';
@@ -57,28 +57,29 @@ import { AuthInterceptorTsService } from './features/auth/services/auth.intercep
     ChangePasswordComponent,
     AssignementComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    RouterModule,
-    ReactiveFormsModule,
-    HttpClientModule,
-    FormsModule,
-    CommonModule,
-    MatCardModule,
-    MatTableModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatButtonModule,
-    MatInputModule,
-    MatTabsModule,
-    SharedModule,
-    ToastrModule.forRoot({
-      timeOut: 3000,
-      positionClass: 'toast-bottom-right',
-      preventDuplicates: true
-    })
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        RouterModule,
+        ReactiveFormsModule,
+        HttpClientModule,
+        FormsModule,
+        CommonModule,
+        MatCardModule,
+        MatTableModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        MatButtonModule,
+        MatInputModule,
+        MatTabsModule,
+        SharedModule,
+        ToastrModule.forRoot({
+            timeOut: 3000,
+            positionClass: 'toast-bottom-right',
+            preventDuplicates: true
+        }),
+        NgOptimizedImage
+    ],
   providers: [
     provideAnimationsAsync(),
     DatePipe,

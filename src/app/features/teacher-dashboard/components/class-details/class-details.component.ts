@@ -52,7 +52,7 @@ export class ClassDetailsComponent implements OnInit {
       });
       return;
     }
-  
+
     // Use teacher.teacher_id if present, else teacher.id
     const teacherId = (this.currentTeacher as any).teacher_id || this.currentTeacher.id;
     console.log('[DEBUG] fetchAllAssignmentNotes using teacherId:', teacherId);
@@ -538,25 +538,21 @@ export class ClassDetailsComponent implements OnInit {
   submitMessage: string = '';
 
   canSubmitTermGrades(): boolean {
-    // Must have currentTerm and at least 2 weeks left before term ends (using splitAcademicYear logic)
     if (!this.currentTerm) {
-      console.log('[canSubmitTermGrades] Disabled: No currentTerm');
+      // console.log('[canSubmitTermGrades] Disabled: No currentTerm');
       return false;
     }
     const now = new Date();
     let termEnd: Date | null = null;
-    // Use academic_year from currentTerm if available
     const academicYear = this.currentTerm.academic_year;
     if (academicYear) {
       const split = this.splitAcademicYear(academicYear.start_date, academicYear.end_date);
-      // Try to match term name to term1 or term2
       if (this.currentTerm.name && this.currentTerm.name.toLowerCase().includes('1')) {
         termEnd = split.term1.end;
       } else {
         termEnd = split.term2.end;
       }
     }
-    // Fallback to currentTerm.end_date if split not possible
     if (!termEnd && (this.currentTerm as any).end_date) {
       termEnd = new Date((this.currentTerm as any).end_date);
     }

@@ -10,12 +10,16 @@ export interface Assignment {
   teacher_id: number;
   class_model_id: number;
   subject_id: number;
-  term_id: number;
+  academic_year_id?: number;
   teacher?: Teacher;
   classModel?: ClassModel;
   subject?: Subject;
   term?: Term;
-  day_of_week?: string[];
-  start_time?: string;
-  end_time?: string;
+  academicYear?: any;
+  day_of_week: string[];
+  start_time: string;
+  end_time: string;
+  coefficient?: number;
+  isActive?: boolean;
+  term_id?: number | null;
 }

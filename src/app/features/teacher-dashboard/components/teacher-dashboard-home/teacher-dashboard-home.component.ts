@@ -226,18 +226,13 @@ export class TeacherDashboardHomeComponent implements OnInit {
     }
 
     const totalTime = endDate.getTime() - startDate.getTime();
-    console.log(totalTime);
     const halfTime = totalTime / 2;
-    console.log(halfTime);
 
     const midDate = new Date(startDate.getTime() + halfTime);
     midDate.setHours(0, 0, 0, 0);
-    console.log(midDate)
 
     const term1End = new Date(midDate);
-    console.log(term1End)
     term1End.setDate(term1End.getDate() - 1);
-    console.log(term1End)
 
     return {
       term1: { start: startDate, end: term1End },
